@@ -1,0 +1,22 @@
+<svg width="383" height="177" viewBox="0 0 383 177" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_b_1406_192)">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M169.707 162.087H189.873C234.632 162.087 270.916 125.803 270.916 81.0436C270.916 36.2845 234.632 0 189.873 0H169.707C145.519 0 123.805 10.5967 108.956 27.4011C101.897 24.9736 94.3213 23.6557 86.4381 23.6557H69.2155C30.9888 23.6557 0 54.6446 0 92.8713C0 131.098 30.9889 162.087 69.2156 162.087H86.4382C101.269 162.087 115.011 157.422 126.276 149.48C138.83 157.463 153.728 162.087 169.707 162.087Z" fill="#F2FBFF" fill-opacity="0.5"/>
+</g>
+<g filter="url(#filter1_b_1406_192)">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M281.623 176.385H301.789C346.548 176.385 382.833 140.101 382.833 95.3419C382.833 50.5828 346.548 14.2983 301.789 14.2983H281.623C257.435 14.2983 235.722 24.8951 220.872 41.6994C213.813 39.2719 206.238 37.9541 198.354 37.9541H181.132C142.905 37.9541 111.916 68.9429 111.916 107.17C111.916 145.396 142.905 176.385 181.132 176.385H198.354C213.186 176.385 226.928 171.72 238.193 163.778C250.746 171.761 265.645 176.385 281.623 176.385Z" fill="#F2FBFF" fill-opacity="0.5"/>
+</g>
+<defs>
+<filter id="filter0_b_1406_192" x="-10" y="-10" width="290.916" height="182.087" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feGaussianBlur in="BackgroundImageFix" stdDeviation="5"/>
+<feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_1406_192"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_backgroundBlur_1406_192" result="shape"/>
+</filter>
+<filter id="filter1_b_1406_192" x="101.916" y="4.29834" width="290.916" height="182.087" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feGaussianBlur in="BackgroundImageFix" stdDeviation="5"/>
+<feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_1406_192"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_backgroundBlur_1406_192" result="shape"/>
+</filter>
+</defs>
+</svg>
