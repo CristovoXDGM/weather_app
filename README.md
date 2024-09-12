@@ -1,16 +1,15 @@
-# weatherapp
+# Weather app
 
-A new Flutter project.
+A minimalistic weather app, with simple info about weather forecast.
 
-## Getting Started
+## Setup and run
 
-This project is a starting point for a Flutter application.
+To run the project, make sure you have flutter version 3.24.0 or latest.
 
-A few resources to get you started if this is your first Flutter project:
+Select your desired device on vsCode and run the project.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Make sure to install the dependencies for the project before run:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```
+flutter pub get
+```
