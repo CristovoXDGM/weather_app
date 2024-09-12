@@ -12,7 +12,7 @@ class GetForecastData implements IGetForecastData {
   Future<ForecastModel> call(double lat, double long) async {
     try {
       final url = Uri.parse(
-        "https://api.open-meteo.com/v1/forecast?latitude=$lat&longitude=$long&current=precipitation,temperature_2m,wind_speed_10m&hourly=precipitation,temperature_2m,wind_speed_10m",
+        "https://api.open-meteo.com/v1/forecast?latitude=$lat&longitude=$long&current=is_day,weather_code,precipitation,temperature_2m,wind_speed_10m&hourly=weather_code,precipitation,temperature_2m,wind_speed_10m",
       );
 
       final response = await http.get(url);

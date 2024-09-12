@@ -12,6 +12,12 @@ class AuthService {
       await prefs.setBool('isAuthenticated', true);
       return;
     }
+
+    await prefs.setBool('isAuthenticated', false);
+  }
+
+  Future<void> logOut() async {
+    final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isAuthenticated', false);
   }
 

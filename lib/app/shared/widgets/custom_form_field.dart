@@ -26,7 +26,7 @@ class _CustomFormFieldState extends State<CustomFormField> {
           borderRadius: BorderRadius.circular(18),
           borderSide: BorderSide.none,
         ),
-        hintText: widget.label,
+        hintText: "Enter your ${widget.label}",
         label: Text(
           widget.label,
           style: const TextStyle(
@@ -35,6 +35,12 @@ class _CustomFormFieldState extends State<CustomFormField> {
         ),
       ),
       obscureText: widget.hideText,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return "Please enter your ${widget.label}";
+        }
+        return null;
+      },
     );
   }
 }

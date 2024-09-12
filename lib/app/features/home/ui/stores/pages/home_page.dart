@@ -1,10 +1,17 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:weatherapp/app/features/home/data/get_weather_type.dart';
 import 'package:weatherapp/app/features/home/ui/stores/get_current_location_store/get_current_location_state.dart';
 import 'package:weatherapp/app/features/home/ui/stores/get_current_location_store/get_current_location_store.dart';
 import 'package:weatherapp/app/features/home/ui/stores/get_forecast_data_store.dart/get_forecast_data_store.dart';
 import 'package:weatherapp/app/features/home/ui/stores/get_forecast_data_store.dart/get_forecast_state.dart';
-import 'package:weatherapp/app/shared/constants/app_colors.dart';
+
+import '../../../../login/data/auth_service.dart';
+import '../../components/current_weather_component.dart';
+import '../../components/hourly_weather_component.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,12 +22,41 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final getCurrentLocationStore = GetCurrentLocationStore();
-
+  final authService = AuthService();
   final getForecastStore = GetForecastDataStore();
 
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      authService.getAuthStatus();
+
+      authService.isAuthenticated.addListener(() {
+        if (!authService.isAuthenticated.value) {
+          if (context.mounted) {
+            context.go("/");
+          }
+        } else {
+          getCurrentLocationStore.getLocation();
+
+          getCurrentLocationStore.addListener(() {
+            final state = getCurrentLocationStore.value;
+
+            if (state is SuccessGetCurrentLocationState) {
+              getForecastStore.getForecastData(
+                state.location.latitude!,
+                state.location.longitude!,
+              );
+            }
+
+            if (state is FailureGetCurrentLocationState) {
+              getForecastStore.value = FailureGetForecastState();
+            }
+          });
+        }
+      });
+    });
 
     getCurrentLocationStore.getLocation();
 
@@ -33,6 +69,10 @@ class _HomePageState extends State<HomePage> {
           state.location.longitude!,
         );
       }
+
+      if (state is FailureGetCurrentLocationState) {
+        getForecastStore.value = FailureGetForecastState();
+      }
     });
   }
 
@@ -41,92 +81,79 @@ class _HomePageState extends State<HomePage> {
     final sizer = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: AppColors.sunny.withOpacity(0.3),
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(
+            Icons.login,
+            color: Colors.red.withOpacity(0.5),
+          ),
+          onPressed: () {
+            context.go("/");
+            authService.logOut();
+          },
+        ),
+      ),
       body: ValueListenableBuilder(
           valueListenable: getForecastStore,
           builder: (context, state, child) {
             if (state is SuccessGetForecastState) {
-              final format = DateFormat("dd/MM/yyyy");
+              final format = DateFormat("dd/MM\nHH:mm");
+              final dateNameFormat = DateFormat("EEEE");
+              final forecastCurrentData = state.forecastData.current;
+              final forecastHourlyData = state.forecastData.hourly;
 
-              final date = DateTime.parse(state.forecastData.current.time);
+              final date = DateTime.parse(forecastCurrentData.time);
 
-              return SingleChildScrollView(
-                child: Stack(
-                  children: [
-                    Container(
-                      alignment: Alignment.center,
-                      decoration: const BoxDecoration(
-                        color: AppColors.sunny,
-                        borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(60),
-                            bottomRight: Radius.circular(60)),
+              final currentWeatherType = GetWeatherType().getWeatherType(
+                state.forecastData.current.weatherCode,
+              );
+
+              return ScrollConfiguration(
+                behavior: ScrollConfiguration.of(context).copyWith(
+                  dragDevices: {
+                    PointerDeviceKind.touch,
+                    PointerDeviceKind.mouse,
+                  },
+                ),
+                child: SingleChildScrollView(
+                  physics: sizer.width < 820
+                      ? const NeverScrollableScrollPhysics()
+                      : const AlwaysScrollableScrollPhysics(),
+                  child: Column(
+                    children: [
+                      CurrentWeatherComponent(
+                        sizer: sizer,
+                        weatherType: currentWeatherType,
+                        date: "${format.format(date)} ",
+                        dayName: dateNameFormat.format(date),
+                        forecastData: forecastCurrentData,
                       ),
-                      height: sizer.height * 0.65,
-                      width: sizer.width,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            "${state.forecastData.current.temperature.toStringAsFixed(0)} C",
-                            style: TextStyle(
-                              color: Colors.white.withOpacity(0.7),
-                              fontSize: 90,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Text(
-                            "${format.format(date)} ",
-                            style: TextStyle(
-                              color: Colors.white.withOpacity(0.7),
-                              fontSize: 30,
-                            ),
-                          )
-                        ],
+                      const SizedBox(
+                        height: 50,
                       ),
-                    ),
-                    Positioned(
-                      bottom: 60,
-                      child: SizedBox(
-                        width: sizer.width,
-                        height: sizer.height * 0.25,
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          itemCount: state.forecastData.hourly.temperature.length,
-                          itemBuilder: (context, index) {
-                            return Container(
-                              height: 80,
-                              width: 80,
-                              margin: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                              ),
-                              color: AppColors.sunny,
-                              child: Text(
-                                "${state.forecastData.hourly.temperature[index].toStringAsFixed(0)} C",
-                                style: TextStyle(
-                                  color: Colors.white.withOpacity(0.7),
-                                  fontSize: 50,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
+                      HourlyWeatherComponent(
+                        sizer: sizer,
+                        currentWeatherType: currentWeatherType,
+                        hourlyWeatherData: forecastHourlyData,
                       ),
-                    ),
-                    Container(
-                      height: sizer.height,
-                      width: double.infinity,
-                      color: AppColors.sunny.withOpacity(0.3),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             }
 
-            return const Center(child: CircularProgressIndicator());
+            if (state is FailureGetForecastState) {
+              return const Center(
+                child: Text("Please, check if your location service is enabled"),
+              );
+            }
+
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           }),
     );
   }
