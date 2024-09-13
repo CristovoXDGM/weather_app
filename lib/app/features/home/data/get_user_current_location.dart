@@ -1,23 +1,19 @@
-import 'package:location/location.dart';
+import 'package:geolocator/geolocator.dart';
 
 class GetUserCurrentLocation {
-  final _location = Location();
-
   late bool _serviceEnabled;
 
-  late PermissionStatus _permissionStatus;
+  late LocationPermission _permissionStatus;
 
-  Future<LocationData> getUserLocation() async {
-    _serviceEnabled = await _location.serviceEnabled();
-
-    final locationData = await _location.getLocation();
+  Future<Position> getUserLocation() async {
+    final locationData = await Geolocator.getCurrentPosition();
 
     return locationData;
   }
 
   Future<bool> checkLocationService() async {
     if (!_serviceEnabled) {
-      _serviceEnabled = await _location.requestService();
+      _serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!_serviceEnabled) {
         return false;
       }
@@ -27,10 +23,11 @@ class GetUserCurrentLocation {
   }
 
   Future<void> checkPermissions() async {
-    _permissionStatus = await _location.hasPermission();
-    if (_permissionStatus == PermissionStatus.denied) {
-      _permissionStatus = await _location.requestPermission();
-      if (_permissionStatus != PermissionStatus.granted) {
+    _permissionStatus = await Geolocator.checkPermission();
+    if (_permissionStatus == LocationPermission.denied) {
+      _permissionStatus = await Geolocator.requestPermission();
+      if (_permissionStatus != LocationPermission.always ||
+          _permissionStatus != LocationPermission.whileInUse) {
         return;
       }
     }

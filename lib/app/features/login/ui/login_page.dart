@@ -33,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
       authService.isAuthenticated.addListener(() {
         if (authService.isAuthenticated.value) {
           if (context.mounted) {
-            context.go("/home");
+            context.pushReplacement("/home");
           }
         }
       });
@@ -59,126 +59,129 @@ class _LoginPageState extends State<LoginPage> {
       responsiveWidth = 600;
     }
 
-    return Scaffold(
-      backgroundColor: AppColors.dayLight,
-      body: ScrollConfiguration(
-        behavior: ScrollConfiguration.of(context).copyWith(dragDevices: {
-          PointerDeviceKind.touch,
-          PointerDeviceKind.mouse,
-        }),
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const SizedBox(
-                      height: 100,
-                    ),
-                    SvgPicture.asset(
-                      AssetsSvgs.loginCloudsSvg,
-                      height: 100,
-                    ),
-                    const SizedBox(
-                      height: 100,
-                    ),
-                    SizedBox(
-                      width: responsiveWidth,
-                      child: CustomFormField(
-                        controller: userNameController,
-                        label: "User",
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        backgroundColor: AppColors.dayLight,
+        body: ScrollConfiguration(
+          behavior: ScrollConfiguration.of(context).copyWith(dragDevices: {
+            PointerDeviceKind.touch,
+            PointerDeviceKind.mouse,
+          }),
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40),
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(
+                        height: 100,
                       ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    SizedBox(
-                      width: responsiveWidth,
-                      child: CustomFormField(
-                        controller: passwordController,
-                        label: "Password",
-                        hideText: true,
+                      SvgPicture.asset(
+                        AssetsSvgs.loginCloudsSvg,
+                        height: 100,
                       ),
-                    ),
-                    const SizedBox(
-                      height: 80,
-                    ),
-                    SizedBox(
-                      width: responsiveWidth * 0.7,
-                      height: 55,
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          final validForm = _formKey.currentState?.validate() ?? false;
+                      const SizedBox(
+                        height: 100,
+                      ),
+                      SizedBox(
+                        width: responsiveWidth,
+                        child: CustomFormField(
+                          controller: userNameController,
+                          label: "User",
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      SizedBox(
+                        width: responsiveWidth,
+                        child: CustomFormField(
+                          controller: passwordController,
+                          label: "Password",
+                          hideText: true,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 80,
+                      ),
+                      SizedBox(
+                        width: responsiveWidth * 0.7,
+                        height: 55,
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            final validForm = _formKey.currentState?.validate() ?? false;
 
-                          if (!validForm) {
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: const Text("Something went wrong"),
-                                  content: const Text(
-                                    "Please check if User/Password is correct and not empty.",
-                                  ),
-                                  actions: [
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        context.pop();
-                                      },
-                                      child: const Text("Ok"),
-                                    )
-                                  ],
-                                );
-                              },
-                            );
+                            if (!validForm) {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: const Text("Something went wrong"),
+                                    content: const Text(
+                                      "Please check if User/Password is correct and not empty.",
+                                    ),
+                                    actions: [
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          context.pop();
+                                        },
+                                        child: const Text("Ok"),
+                                      )
+                                    ],
+                                  );
+                                },
+                              );
 
-                            return;
-                          }
-
-                          await authService.logInUser(
-                            LoginParams(
-                                userName: userNameController.text,
-                                password: passwordController.text),
-                          );
-                          await authService.getAuthStatus();
-                          if (authService.isAuthenticated.value) {
-                            if (context.mounted) {
-                              context.go("/home");
+                              return;
                             }
-                          } else if (context.mounted) {
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: const Text("Auth fail"),
-                                  content: const Text(
-                                    "Invalid User/Password",
-                                  ),
-                                  actions: [
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        context.pop();
-                                        userNameController.clear();
-                                        passwordController.clear();
-                                      },
-                                      child: const Text("Ok"),
-                                    )
-                                  ],
-                                );
-                              },
+
+                            await authService.logInUser(
+                              LoginParams(
+                                  userName: userNameController.text,
+                                  password: passwordController.text),
                             );
-                          }
-                        },
-                        child: const Text("Log In"),
+                            await authService.getAuthStatus();
+                            if (authService.isAuthenticated.value) {
+                              if (context.mounted) {
+                                context.go("/home");
+                              }
+                            } else if (context.mounted) {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: const Text("Auth fail"),
+                                    content: const Text(
+                                      "Invalid User/Password",
+                                    ),
+                                    actions: [
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          context.pop();
+                                          userNameController.clear();
+                                          passwordController.clear();
+                                        },
+                                        child: const Text("Ok"),
+                                      )
+                                    ],
+                                  );
+                                },
+                              );
+                            }
+                          },
+                          child: const Text("Log In"),
+                        ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 80,
-                    ),
-                  ],
+                      const SizedBox(
+                        height: 80,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

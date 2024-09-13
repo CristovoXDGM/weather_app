@@ -30,7 +30,7 @@ class _CurrentWeatherComponentState extends State<CurrentWeatherComponent> {
     return Container(
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: widget.weatherType.getColor(),
+        color: widget.weatherType.getColor(widget.forecastData.isDay),
         borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(60),
           bottomRight: Radius.circular(60),

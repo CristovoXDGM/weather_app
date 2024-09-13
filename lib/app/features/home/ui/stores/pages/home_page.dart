@@ -45,8 +45,8 @@ class _HomePageState extends State<HomePage> {
 
             if (state is SuccessGetCurrentLocationState) {
               getForecastStore.getForecastData(
-                state.location.latitude!,
-                state.location.longitude!,
+                state.location.latitude,
+                state.location.longitude,
               );
             }
 
@@ -65,8 +65,8 @@ class _HomePageState extends State<HomePage> {
 
       if (state is SuccessGetCurrentLocationState) {
         getForecastStore.getForecastData(
-          state.location.latitude!,
-          state.location.longitude!,
+          state.location.latitude,
+          state.location.longitude,
         );
       }
 
@@ -82,20 +82,20 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.login,
-            color: Colors.red.withOpacity(0.5),
-          ),
-          onPressed: () {
-            context.go("/");
-            authService.logOut();
-          },
-        ),
-      ),
+      // appBar: AppBar(
+      //   backgroundColor: Colors.transparent,
+      //   elevation: 0,
+      //   leading: IconButton(
+      //     icon: Icon(
+      //       Icons.login,
+      //       color: Colors.red.withOpacity(0.5),
+      //     ),
+      //     onPressed: () {
+      //       context.pushReplacement("/");
+      //       authService.logOut();
+      //     },
+      //   ),
+      // ),
       body: ValueListenableBuilder(
           valueListenable: getForecastStore,
           builder: (context, state, child) {
@@ -105,7 +105,7 @@ class _HomePageState extends State<HomePage> {
               final forecastCurrentData = state.forecastData.current;
               final forecastHourlyData = state.forecastData.hourly;
 
-              final date = DateTime.parse(forecastCurrentData.time);
+              final date = DateTime.parse(forecastCurrentData.time).toLocal();
 
               final currentWeatherType = GetWeatherType().getWeatherType(
                 state.forecastData.current.weatherCode,

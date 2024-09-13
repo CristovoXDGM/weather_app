@@ -13,10 +13,10 @@ class GetWeatherType {
     if (weatherCode > 0 && weatherCode < 71) {
       return WeatherType.cloudy;
     }
-    if (weatherCode > 71 && weatherCode < 95) {
+    if (weatherCode >= 71 && weatherCode < 95) {
       return WeatherType.snowy;
     }
-    if (weatherCode > 95) {
+    if (weatherCode >= 95) {
       return WeatherType.storm;
     }
 
@@ -41,7 +41,7 @@ enum WeatherType {
       return AppColors.night;
     }
 
-    return isDay != null && isDay == 1 ? AppColors.dayLight : AppColors.night;
+    return AppColors.dayLight;
   }
 
   String getIcon() {
@@ -52,7 +52,7 @@ enum WeatherType {
       return AssetsSvgs.snowy;
     }
     if (this == WeatherType.storm) {
-      return AssetsSvgs.clearNight;
+      return AssetsSvgs.snowy;
     }
     return AssetsSvgs.clearDay;
   }

@@ -51,7 +51,7 @@ class _HourlyWeatherComponentState extends State<HourlyWeatherComponent> {
           itemBuilder: (context, index) {
             final hourlyDateTime = DateTime.parse(
               widget.hourlyWeatherData.time[index],
-            );
+            ).toLocal();
             final hourlyWeatherType = GetWeatherType().getWeatherType(
               widget.hourlyWeatherData.weatherCode[index],
             );
