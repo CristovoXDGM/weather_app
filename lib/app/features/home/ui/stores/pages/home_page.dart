@@ -82,20 +82,20 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      // appBar: AppBar(
-      //   backgroundColor: Colors.transparent,
-      //   elevation: 0,
-      //   leading: IconButton(
-      //     icon: Icon(
-      //       Icons.login,
-      //       color: Colors.red.withOpacity(0.5),
-      //     ),
-      //     onPressed: () {
-      //       context.pushReplacement("/");
-      //       authService.logOut();
-      //     },
-      //   ),
-      // ),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(
+            Icons.login,
+            color: Colors.red.withOpacity(0.5),
+          ),
+          onPressed: () {
+            context.pushReplacement("/");
+            authService.logOut();
+          },
+        ),
+      ),
       body: ValueListenableBuilder(
           valueListenable: getForecastStore,
           builder: (context, state, child) {
