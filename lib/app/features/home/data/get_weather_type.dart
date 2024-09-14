@@ -46,13 +46,13 @@ enum WeatherType {
 
   String getIcon() {
     if (this == WeatherType.cloudy) {
-      return AssetsSvgs.cloudy;
+      return AssetsSvgs.clearClouds;
     }
     if (this == WeatherType.snowy) {
-      return AssetsSvgs.snowy;
+      return AssetsSvgs.snowClouds;
     }
     if (this == WeatherType.storm) {
-      return AssetsSvgs.snowy;
+      return AssetsSvgs.stormCloud;
     }
     return AssetsSvgs.clearDay;
   }
