@@ -48,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final sizer = MediaQuery.of(context).size;
+    final sizer = MediaQuery.sizeOf(context);
 
     double responsiveWidth = 0;
 

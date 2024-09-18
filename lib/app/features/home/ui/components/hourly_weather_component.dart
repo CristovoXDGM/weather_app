@@ -28,8 +28,17 @@ class _HourlyWeatherComponentState extends State<HourlyWeatherComponent> {
 
   @override
   Widget build(BuildContext context) {
+    var axisCount = 1;
+
+    if (widget.sizer.width > 820 && widget.sizer.width < 1200) {
+      axisCount = 4;
+    }
+    if (widget.sizer.width >= 1200) {
+      axisCount = 6;
+    }
+
     return SizedBox(
-      width: widget.sizer.width,
+      width: widget.sizer.width < 820 ? widget.sizer.width : widget.sizer.width * 0.7,
       height: widget.sizer.width < 820 ? widget.sizer.height * 0.25 : widget.sizer.height,
       child: ScrollConfiguration(
         behavior: ScrollConfiguration.of(context).copyWith(
@@ -39,8 +48,9 @@ class _HourlyWeatherComponentState extends State<HourlyWeatherComponent> {
           },
         ),
         child: GridView.builder(
+          padding: const EdgeInsets.all(20),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: widget.sizer.width < 820 ? 1 : 6,
+            crossAxisCount: axisCount,
             childAspectRatio: 4 / 4,
             crossAxisSpacing: 8,
             mainAxisSpacing: 20,
@@ -79,16 +89,19 @@ class _HourlyWeatherComponentState extends State<HourlyWeatherComponent> {
                         ),
                       ),
                       const SizedBox(
-                        height: 20,
+                        height: 10,
                       ),
                       Center(
                         child: SvgPicture.asset(
                           hourlyWeatherType.getIcon(),
-                          height: 20,
+                          placeholderBuilder: (context) => const ColoredBox(
+                            color: Colors.grey,
+                          ),
+                          height: 30,
                         ),
                       ),
                       const SizedBox(
-                        height: 20,
+                        height: 10,
                       ),
                       Text(
                         format.format(hourlyDateTime),
