@@ -30,8 +30,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    // GetCityInfoData().getCityData("maceio");
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       authService.getAuthStatus();
 
@@ -114,10 +112,13 @@ class _HomePageState extends State<HomePage> {
                 state.forecastData.current.weatherCode,
               );
 
+              final isFullScreen =
+                  screenType == ScreenType.expanded || screenType == ScreenType.medium;
+
               return Container(
                 height: sizer.height,
                 width: sizer.width,
-                color: currentWeatherType.getColor().withOpacity(0.3),
+                color: currentWeatherType.getColor().withValues(alpha: 0.4),
                 child: ScrollConfiguration(
                   behavior: ScrollConfiguration.of(context).copyWith(
                     dragDevices: {
@@ -126,7 +127,7 @@ class _HomePageState extends State<HomePage> {
                     },
                   ),
                   child: SingleChildScrollView(
-                    child: screenType == ScreenType.expanded
+                    child: isFullScreen
                         ? Row(
                             children: [
                               Column(
